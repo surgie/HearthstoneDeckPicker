@@ -20,65 +20,67 @@
     <ul id="deck-log">
     </ul>
 
-</body>
+    <script>
+        if (!isProduction) {
+            let decks = ['Aggro DH', 'Face Hunter', 'HL Hunter', 'Dancing Rogue', 'Orange Aggro'];
+            let epsilon = 10;
+        }
 
-<script>
-    let decks = ['Aggro DH', 'Phaoris Druid', 'Face Hunter', 'HL Hunter', 'Dancing Rogue', 'Orange Aggro'];
-    let epsilon = 20;
+        document.getElementById('deck-list').innerText = `Current Decks: ${decks.join(', ')}`;
+        document.getElementById('current-epsilon').innerText = `Current Epsilon: ${epsilon * .01}`;
 
-    document.getElementById('deck-list').innerText = `Current Decks: ${decks.join(', ')}`;
-    document.getElementById('current-epsilon').innerText = `Current Epsilon: ${epsilon * .01}`;
+        let results = document.getElementById('deck-log');
 
-    let results = document.getElementById('deck-log');
+        document.getElementById('test-log').addEventListener('click', () => {
+            let total = 0;
+            let explore = 0;
+            let deckResults = {};
 
-    document.getElementById('test-log').addEventListener('click', () => {
-        let total = 0;
-        let explore = 0;
-        let deckResults = {};
+            for (var i = 0; i < 100000; i++) {
+                let rand = randomIntFromInterval(1, 100);
+                if (rand <= epsilon) {
+                    explore += 1;
 
-        for (var i = 0; i < 100000; i++) {
-            let rand = randomIntFromInterval(1, 100);
-            if (rand <= epsilon) {
-                explore += 1;
+                    let deck = decks[randomIntFromInterval(0, decks.length - 1)];
+                    deckResults[deck] = (deckResults[deck] || 0) + 1;
+                }
 
-                let deck = decks[randomIntFromInterval(0, decks.length - 1)];
-                deckResults[deck] = (deckResults[deck] || 0) + 1;
+                total++;
             }
 
-            total++;
-        }
+            console.log(`total: ${total}`);
+            console.log(`explorations: ${explore}`);
+            console.log(deckResults);
+        });
 
-        console.log(`total: ${total}`);
-        console.log(`explorations: ${explore}`);
-        console.log(deckResults);
-    });
-
-    document.getElementById('deck-random').addEventListener('click', () => {
-        randomDeck();
-    });
-
-    document.getElementById('deck-picker').addEventListener('click', () => {
-        let rand = randomIntFromInterval(1, 100);
-        if (rand <= epsilon) {
+        document.getElementById('deck-random').addEventListener('click', () => {
             randomDeck();
-        } else {
-            addLine(`Choose Best Deck`);
+        });
+
+        document.getElementById('deck-picker').addEventListener('click', () => {
+            let rand = randomIntFromInterval(1, 100);
+            if (rand <= epsilon) {
+                randomDeck();
+            } else {
+                addLine(`Choose Best Deck`);
+            }
+        });
+
+        function addLine(text) {
+            let li = document.createElement('li');
+            li.textContent = `${text} (${new Date().toLocaleTimeString()})`;
+            results.prepend(li);
         }
-    });
 
-    function addLine(text) {
-        let li = document.createElement('li');
-        li.textContent = `${text} (${new Date().toLocaleTimeString()})`;
-        results.prepend(li);
-    }
+        function randomDeck() {
+            addLine(decks[randomIntFromInterval(0, decks.length - 1)]);
+        }
 
-    function randomDeck() {
-        addLine(decks[randomIntFromInterval(0, decks.length - 1)]);
-    }
+        function randomIntFromInterval(min, max) { // min and max included 
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+    </script>
 
-    function randomIntFromInterval(min, max) { // min and max included 
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-</script>
+</body>
 
 </html>
