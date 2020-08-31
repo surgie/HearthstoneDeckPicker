@@ -14,6 +14,8 @@
     <hr>
 
     <button id="deck-picker">Choose Next Deck</button>
+    <button id="deck-random">Choose a Random Deck</button>
+    <button id="test-log">Test and log</button>
 
     <ul id="deck-log">
     </ul>
@@ -29,22 +31,50 @@
 
     let results = document.getElementById('deck-log');
 
-    document.getElementById('deck-picker').addEventListener('click', () => {
-        let li = document.createElement('li');
+    document.getElementById('test-log').addEventListener('click', () => {
+        let total = 0;
+        let explore = 0;
+        let deckResults = {};
 
-        let rand = randomIntFromInterval(1, 100);
-        if (rand <= epsilon) {
-            let option = randomIntFromInterval(0, decks.length - 1);
-            li.textContent = decks[option];
-        } else {
-            li.textContent = `Choose Best Deck`;
+        for (var i = 0; i < 100000; i++) {
+            let rand = randomIntFromInterval(1, 100);
+            if (rand <= epsilon) {
+                explore += 1;
+
+                let deck = decks[randomIntFromInterval(0, decks.length - 1)];
+                deckResults[deck] = (deckResults[deck] || 0) + 1;
+            }
+
+            total++;
         }
 
-        li.textContent += ` (${new Date().toLocaleTimeString()})`;
-
-        results.prepend(li);
+        console.log(`total: ${total}`);
+        console.log(`explorations: ${explore}`);
+        console.log(deckResults);
     });
 
+    document.getElementById('deck-random').addEventListener('click', () => {
+        randomDeck();
+    });
+
+    document.getElementById('deck-picker').addEventListener('click', () => {
+        let rand = randomIntFromInterval(1, 100);
+        if (rand <= epsilon) {
+            randomDeck();
+        } else {
+            addLine(`Choose Best Deck`);
+        }
+    });
+
+    function addLine(text) {
+        let li = document.createElement('li');
+        li.textContent = `${text} (${new Date().toLocaleTimeString()})`;
+        results.prepend(li);
+    }
+
+    function randomDeck() {
+        addLine(decks[randomIntFromInterval(0, decks.length - 1)]);
+    }
 
     function randomIntFromInterval(min, max) { // min and max included 
         return Math.floor(Math.random() * (max - min + 1) + min);
