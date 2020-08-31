@@ -1,0 +1,54 @@
+<html>
+
+<head>
+    <title>Hearthstone Deck Picker - 2020/08/31</title>
+</head>
+
+<body>
+
+    <h1>Deck Picker</h1>
+
+    <div id="deck-list"></div>
+    <div id="current-epsilon"></div>
+
+    <hr>
+
+    <button id="deck-picker">Choose Next Deck</button>
+
+    <ul id="deck-log">
+    </ul>
+
+</body>
+
+<script>
+    let decks = ['Aggro DH', 'Phaoris Druid', 'Face Hunter', 'HL Hunter', 'Dancing Rogue', 'Orange Aggro'];
+    let epsilon = 20;
+
+    document.getElementById('deck-list').innerText = `Current Decks: ${decks.join(', ')}`;
+    document.getElementById('current-epsilon').innerText = `Current Epsilon: ${epsilon * .01}`;
+
+    let results = document.getElementById('deck-log');
+
+    document.getElementById('deck-picker').addEventListener('click', () => {
+        let li = document.createElement('li');
+
+        let rand = randomIntFromInterval(1, 100);
+        if (rand <= epsilon) {
+            let option = randomIntFromInterval(0, decks.length - 1);
+            li.textContent = decks[option];
+        } else {
+            li.textContent = `Choose Best Deck`;
+        }
+
+        li.textContent += ` (${new Date().toLocaleTimeString()})`;
+
+        results.prepend(li);
+    });
+
+
+    function randomIntFromInterval(min, max) { // min and max included 
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+</script>
+
+</html>
