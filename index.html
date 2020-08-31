@@ -21,10 +21,8 @@
     </ul>
 
     <script>
-        if (!isProduction) {
-            let decks = ['Aggro DH', 'Face Hunter', 'HL Hunter', 'Dancing Rogue', 'Orange Aggro'];
-            let epsilon = 10;
-        }
+        let decks = ['Aggro DH', 'Phaoris Druid', 'Face Hunter', 'HL Hunter', 'Dancing Rogue', 'Orange Aggro'];
+        let epsilon = 20;
 
         document.getElementById('deck-list').innerText = `Current Decks: ${decks.join(', ')}`;
         document.getElementById('current-epsilon').innerText = `Current Epsilon: ${epsilon * .01}`;
